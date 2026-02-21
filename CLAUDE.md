@@ -1,45 +1,44 @@
-# AI-DLC and Spec-Driven Development
-
-Kiro-style Spec Driven Development implementation on AI-DLC (AI Development Life Cycle)
+# ECDC
 
 ## Project Context
 
-### Paths
-- Steering: `.kiro/steering/`
-- Specs: `.kiro/specs/`
+@.kiro/steering/product.md
+@.kiro/steering/tech.md
+@.kiro/steering/structure.md
 
-### Steering vs Specification
+## Commands
 
-**Steering** (`.kiro/steering/`) - Guide AI with project-wide rules and context
-**Specs** (`.kiro/specs/`) - Formalize development process for individual features
+```bash
+npm run dev        # Dev server (Vite)
+npm run build      # Production build
+npm test           # Unit tests
+npx tsc --noEmit   # Type check
+```
 
-### Active Specifications
-- Check `.kiro/specs/` for active specifications
-- Use `/kiro:spec-status [feature-name]` to check progress
+## Language
 
-## Development Guidelines
-- Think in English, generate responses in Japanese. All Markdown content written to project files (e.g., requirements.md, design.md, tasks.md, research.md, validation reports) MUST be written in the target language configured for this specification (see spec.json.language).
+IMPORTANT: Think in English, respond in Japanese. All project Markdown files (requirements.md, design.md, tasks.md, etc.) MUST be written in the language configured in `spec.json.language`.
 
-## Minimal Workflow
-- Phase 0 (optional): `/kiro:steering`, `/kiro:steering-custom`
-- Phase 1 (Specification):
-  - `/kiro:spec-init "description"`
-  - `/kiro:spec-requirements {feature}`
-  - `/kiro:validate-gap {feature}` (optional: for existing codebase)
-  - `/kiro:spec-design {feature} [-y]`
-  - `/kiro:validate-design {feature}` (optional: design review)
-  - `/kiro:spec-tasks {feature} [-y]`
-- Phase 2 (Implementation): `/kiro:spec-impl {feature} [tasks]`
-  - `/kiro:validate-impl {feature}` (optional: after implementation)
-- Progress check: `/kiro:spec-status {feature}` (use anytime)
+## Spec-Driven Workflow
 
-## Development Rules
-- 3-phase approval workflow: Requirements → Design → Tasks → Implementation
-- Human review required each phase; use `-y` only for intentional fast-track
-- Keep steering current and verify alignment with `/kiro:spec-status`
-- Follow the user's instructions precisely, and within that scope act autonomously: gather the necessary context and complete the requested work end-to-end in this run, asking questions only when essential information is missing or the instructions are critically ambiguous.
+Specs: `.kiro/specs/` | Steering: `.kiro/steering/`
 
-## Steering Configuration
-- Load entire `.kiro/steering/` as project memory
-- Default files: `product.md`, `tech.md`, `structure.md`
-- Custom files are supported (managed via `/kiro:steering-custom`)
+1. `/kiro:spec-init "description"` → `/kiro:spec-requirements {feature}` → `/kiro:spec-design {feature}` → `/kiro:spec-tasks {feature}`
+2. `/kiro:spec-impl {feature} [tasks]`
+3. `/kiro:spec-status {feature}` — check progress anytime
+
+- 3-phase approval: Requirements → Design → Tasks → Implementation
+- Human review required each phase; `-y` only for intentional fast-track
+- Optional validation: `/kiro:validate-gap`, `/kiro:validate-design`, `/kiro:validate-impl`
+- Steering management: `/kiro:steering`, `/kiro:steering-custom`
+
+## Verification
+
+After code changes, verify in this order:
+1. `npx tsc --noEmit` — type check
+2. `npm test` — tests pass
+3. `npm run build` — build succeeds (for build-affecting changes)
+
+## Context Management
+
+When compacting, preserve: modified file list, current spec phase, and test results.
